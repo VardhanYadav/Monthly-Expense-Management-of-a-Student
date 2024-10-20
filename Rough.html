@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Dashboard</title>
+    <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #e0f7fa;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            background: linear-gradient(to bottom right, #ffffff, #e1f5fe);
+            border-radius: 12px;
+            margin-right: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .dashboard-container {
+            flex: 1;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 600px;
+            transition: background 0.3s;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #00796b;
+        }
+
+        h2 {
+            color: #00575b;
+            margin-bottom: 10px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 50px;
+            background-color: #00796b;
+            color: #fff;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 999;
+            transition: background-color 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background-color: #004d40;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            z-index: 999;
+            margin-left: 20px;
+        }
+
+        .dropdown button {
+            background-color: #00796b;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown button:hover {
+            background-color: #004d40;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ffffff;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            margin-top: 5px;
+            border-radius: 8px;
+        }
+
+        .dropdown-content a {
+            color: #00796b;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #e0f2f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-top: 2px solid #1e90ff;
+            color: #aaa;
+            position: relative;
+            width: 100%;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .content {
+            background-color: #424242;
+            color: #000;
+        }
+
+        .dark-mode .dashboard-container {
+            background-color: #1e1e1e;
+        }
+
+        .dark-mode h1 {
+            color: #80cbc4;
+        }
+
+        .dark-mode h2 {
+            color: #4db6ac;
+        }
+
+        .dark-mode .dropdown-content {
+            background-color: #424242;
+        }
+
+        .dark-mode .dropdown-content a {
+            color: #000;
+        }
+
+        .dark-mode .dropdown-content a:hover {
+            background-color: #336b65;
+        }
+
+        ul {
+            list-style-type: square;
+            padding-left: 20px;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle" onclick="toggleTheme()">🌗</div>
+
+    <div class="dropdown">
+        <button onclick="toggleDropdown()">Choose Dashboard</button>
+        <div class="dropdown-content" id="dropdownOptions">
+            <a href="#" onclick="loadDashboard('tableau')">Tableau</a>
+            <a href="#" onclick="loadDashboard('powerbi')">PowerBI</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content" id="content">
+            <h1>My Dashboard</h1>
+            <div class="description">
+                <ul id="descriptionList">
+                    <li><strong>Sheet 1:</strong> Data collected from different institutes.</li>
+                    <li><strong>Sheet 2:</strong> Monthly expense management for students.</li>
+                    <li><strong>Sheet 3:</strong> Spending patterns by month.</li>
+                    <li><strong>Sheet 4:</strong> Most purchased food items by students.</li>
+                    <li><strong>Sheet 5:</strong> Expected spending amounts for students.</li>
+                    <li><strong>Sheet 6:</strong> Number of students with similar spending habits.</li>
+                    <li><strong>Sheet 7:</strong> Feasible food purchasing options for students.</li>
+                    <li><strong>Sheet 8:</strong> Times of the week when students are likely to order food.</li>
+                </ul>
+                <p>This dashboard helps analyze student spending behavior effectively and make informed decisions based on data insights.</p>
+            </div>
+        </div>
+
+        <div class="dashboard-container" id="dashboardContainer">
+        </div>
+    </div>
+
+    <footer>
+        Project made by Ratish, Vardhan, Chiya, Rohit
+    </footer>
+
+    <script>
+        function loadTableauDashboard() {
+            const container = document.getElementById('dashboardContainer');
+            container.innerHTML = '';
+
+            const vizUrl = "https://prod-apnortheast-a.online.tableau.com/t/vy1691-403942c21d/views/I_V_Project2/Sheet3";
+            const vizElement = document.createElement('tableau-viz');
+            vizElement.src = vizUrl;
+            vizElement.style.width = "100%";
+            vizElement.style.height = "600px";
+            container.appendChild(vizElement);
+        }
+
+        function loadPowerBIDashboard() {
+            const dashboardContainer = document.getElementById('dashboardContainer');
+            const content = document.getElementById('content');
+            const descriptionList = document.getElementById('descriptionList');
+            dashboardContainer.innerHTML = '';
+
+            const powerbiIframe = document.createElement('iframe');
+            powerbiIframe.title = "PowerBI Dashboard";
+            powerbiIframe.width = "100%";
+            powerbiIframe.height = "600px";
+            powerbiIframe.src = "https://app.powerbi.com/reportEmbed?reportId=6f271771-b849-4da6-8da9-b9a4519dc5c0&autoAuth=true&ctid=813e6569-4e44-4d95-88a0-16a97bd5277c";
+            powerbiIframe.frameBorder = "0";
+            powerbiIframe.allowFullScreen = "true";
+            dashboardContainer.appendChild(powerbiIframe);
+
+            const powerBIDescription = `
+                <ul>
+                    <li><strong>Report 1:</strong> Data collected from different institutes.</li>
+                    <li><strong>Report 2:</strong> Expected spending amounts for students.</li>
+                    <li><strong>Report 3:</strong> Monthly expense management for students.</li>
+                    <li><strong>Report 4:</strong> Trends and Expected spending amounts for students.</li>
+                    <li><strong>Report 5:</strong> Spending patterns by month.</li>
+                    <li><strong>Report 6:</strong> Monthly expense management for students.</li>
+                    <li><strong>Report 8:</strong> Data collected from different institutes.</li>
+                </ul>
+            `;
+            descriptionList.innerHTML = powerBIDescription;
+            content.querySelector('p').innerText = "This dashboard helps analyze student spending behavior effectively and make informed decisions based on data insights.";
+        }
+
+        function loadDashboard(type) {
+            const content = document.getElementById('content');
+            const descriptionList = document.getElementById('descriptionList');
+            if (type === 'tableau') {
+                loadTableauDashboard();
+                descriptionList.innerHTML = `
+                    <li><strong>Sheet 1:</strong> Data collected from different institutes.</li>
+                    <li><strong>Sheet 2:</strong> Monthly expense management for students.</li>
+                    <li><strong>Sheet 3:</strong> Spending patterns by month.</li>
+                    <li><strong>Sheet 4:</strong> Most purchased food items by students.</li>
+                    <li><strong>Sheet 5:</strong> Expected spending amounts for students.</li>
+                    <li><strong>Sheet 6:</strong> Number of students with similar spending habits.</li>
+                    <li><strong>Sheet 7:</strong> Feasible food purchasing options for students.</li>
+                    <li><strong>Sheet 8:</strong> Times of the week when students are likely to order food.</li>
+                `;
+                content.querySelector('p').innerText = "This dashboard helps analyze student spending behavior effectively and make informed decisions based on data insights.";
+            } else if (type === 'powerbi') {
+                loadPowerBIDashboard();
+            }
+        }
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownOptions');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+        }
+    </script>
+</body>
+</html>
