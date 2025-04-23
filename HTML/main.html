@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Dashboard</title>
+    <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="theme-toggle" onclick="toggleTheme()">🌗</div>
+
+    <div class="dropdown">
+        <button onclick="toggleDropdown()">Choose Dashboard</button>
+        <div class="dropdown-content" id="dropdownOptions">
+            <a href="#" onclick="loadDashboard('tableau')">Tableau</a>
+            <a href="#" onclick="loadDashboard('powerbi')">PowerBI</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content" id="content">
+            <h1>My Dashboard</h1>
+            <div class="description">
+                <ul id="descriptionList">
+                    <li><strong>Sheet 1:</strong> Data collected from different institutes.</li>
+                    <li><strong>Sheet 2:</strong> Monthly expense management for students.</li>
+                    <li><strong>Sheet 3:</strong> Spending patterns by month.</li>
+                    <li><strong>Sheet 4:</strong> Most purchased food items by students.</li>
+                    <li><strong>Sheet 5:</strong> Expected spending amounts for students.</li>
+                    <li><strong>Sheet 6:</strong> Number of students with similar spending habits.</li>
+                    <li><strong>Sheet 7:</strong> Feasible food purchasing options for students.</li>
+                    <li><strong>Sheet 8:</strong> Times of the week when students are likely to order food.</li>
+                </ul>
+                <p>This dashboard helps analyze student spending behavior effectively and make informed decisions based on data insights.</p>
+            </div>
+        </div>
+
+        <div class="dashboard-container" id="dashboardContainer">
+        </div>
+    </div>
+
+    <footer>
+        Project made by Ratish, Vardhan, Chiya, Rohit
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
